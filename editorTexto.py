@@ -47,6 +47,26 @@ class EditorTexto(Frame):
         fileToSave.write(toSave)
         fileToSave.close()
 
+    def malCaracter(self, patron, tamano):
+        malCaracter = [-1]*256
+        
+        for i in range(tamano):
+            malCaracter[ord(patron[i])] = i
+        
+        return malCaracter
+    
+    def buscarEnCadena(self, cadenaTexto, patronComparar):
+        tamanoPatron = len(patronComparar)
+        tamanoCadena = len(cadenaTexto)
+
+        caracterIncorrecto = self.malCaracter(patronComparar, tamanoPatron)
+
+        s = 0
+        while s < tamanoCadena - tamanoPatron:
+            j-= 1
+            
+
+
 
 def main():
     root = Tk()
