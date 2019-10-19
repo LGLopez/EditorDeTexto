@@ -1,4 +1,6 @@
 from tkinter import Frame, Tk, BOTH, Text, Menu, END, filedialog
+from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
 
 class EditorTexto(Frame):
     def __init__(self, parent):
@@ -17,11 +19,15 @@ class EditorTexto(Frame):
         barraMenu = Menu(self.parent)
         self.parent.config(menu = barraMenu)
 
+        fileBuscar = Menu(barraMenu)
+        fileBuscar.add_command(label = 'Busqueda en el texto', command = self.algoritmoBoyer)
+
         fileMenu = Menu(barraMenu)
         fileMenu.add_command(label = 'Abrir', command = self.openFile)
         fileMenu.add_command(label = 'Guardar', command = self.saveAs)
         fileMenu.add_command(label = 'Salir', command = self.parent.destroy)
         barraMenu.add_cascade(label = 'Archivo', menu = fileMenu)
+        barraMenu.add_cascade(label = 'Buscar', menu = fileBuscar)
 
         self.txt= Text(self)
         self.txt.pack(fill = BOTH, expand = 1)
@@ -63,10 +69,23 @@ class EditorTexto(Frame):
 
         s = 0
         while s < tamanoCadena - tamanoPatron:
-            j-= 1
+            j = tamanoPatron - 1
+
+            while j>= 0 and patronComparar[j] == cadenaTexto[s+j]:
+                j-=1
             
+            if j<0:
+                print("Pattern occur at shift = {}".format(s))
 
-
+                s+= (tamanoPatron - caracterIncorrecto[ord(cadenaTexto[s+tamanoPatron])] if s+tamanoPatron<tamanoCadena else 1)
+            else:
+                s+= max(1, j-caracterIncorrecto[ord(cadenaTexto[s+j])])
+        
+    def algoritmoBoyer(self):
+        toSearch = self.txt.get('1.0', 'end-1c')
+        textToSearch = askstring('Buscar','Ingrese texto a buscar:')
+        self.buscarEnCadena(toSearch, textToSearch)
+        
 
 def main():
     root = Tk()
