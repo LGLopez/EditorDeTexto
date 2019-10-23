@@ -75,8 +75,10 @@ class EditorTexto(Frame):
                 j-=1
             
             if j<0:
-                print("Pattern occur at shift = {}".format(s))
+                print("Patron ocurre en la posicion= {}".format(s))
+                print(cadenaTexto[(s-3):(s+tamanoPatron+5)])
 
+                
                 s+= (tamanoPatron - caracterIncorrecto[ord(cadenaTexto[s+tamanoPatron])] if s+tamanoPatron<tamanoCadena else 1)
             else:
                 s+= max(1, j-caracterIncorrecto[ord(cadenaTexto[s+j])])
