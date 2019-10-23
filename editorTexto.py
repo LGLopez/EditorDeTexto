@@ -1,7 +1,7 @@
 from tkinter import Frame, Tk, BOTH, Text, Menu, END, filedialog
 from tkinter.simpledialog import askstring
 from tkinter.messagebox import showinfo
-
+from tkinter import *
 class EditorTexto(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -20,7 +20,7 @@ class EditorTexto(Frame):
         self.parent.config(menu = barraMenu)
 
         fileBuscar = Menu(barraMenu)
-        fileBuscar.add_command(label = 'Busqueda en el texto', command = self.algoritmoBoyer)
+        fileBuscar.add_command(label = 'Busqueda en el texto', command = self.createWindowToSearch)
 
         fileMenu = Menu(barraMenu)
         fileMenu.add_command(label = 'Abrir', command = self.openFile)
@@ -75,10 +75,11 @@ class EditorTexto(Frame):
                 j-=1
             
             if j<0:
-                print("Patron ocurre en la posicion= {}".format(s))
-                print(cadenaTexto[(s-3):(s+tamanoPatron+5)])
+                #print("Patron ocurre en la posicion = {}".format(s))
+                #print(cadenaTexto[(s-5):(s+tamanoPatron+5)])
 
-                
+                messagebox.showinfo('Encontrado!','En la posicion {}\n'.format(s) + cadenaTexto[(s-5):(s+tamanoPatron+5)])
+
                 s+= (tamanoPatron - caracterIncorrecto[ord(cadenaTexto[s+tamanoPatron])] if s+tamanoPatron<tamanoCadena else 1)
             else:
                 s+= max(1, j-caracterIncorrecto[ord(cadenaTexto[s+j])])
@@ -88,7 +89,34 @@ class EditorTexto(Frame):
         textToSearch = askstring('Buscar','Ingrese texto a buscar:')
         self.buscarEnCadena(toSearch, textToSearch)
         
+    def createWindowToSearch(self):
+        self.mayus = IntVar()
 
+        window = Toplevel(self.parent)
+        window.geometry('500x500')
+
+        Label(window, text = 'Ingrese palabra a buscar: ').pack()
+
+        Checkbutton(window, text = 'Mayusculas', variable = self.mayus).pack()
+
+        toS = StringVar()
+        txtEntry = Entry(window, textvariable = toS)
+        txtEntry.pack()
+
+        
+
+        def buscarYa():
+            toSeachWord = toS.get()
+
+            if self.mayus == 1:
+                toSearch = self.txt.get('1.0', 'end-1c')
+                self.buscarEnCadena(toSearch,toSeachWord)
+            else:
+                toSearch = self.txt.get('1.0', 'end-1c')
+                self.buscarEnCadena(toSearch,toSeachWord.lower())
+                
+        Button(window, text = 'Buscar!', command = buscarYa).pack()
+        
 def main():
     root = Tk()
     EditorTexto(root)
